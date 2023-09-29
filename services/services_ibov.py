@@ -6,18 +6,19 @@ from bokeh.plotting import figure
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
-import plotly.figure_factory as ff
 
 
 def retrieve_ibov_data(local_session: Session, data_inicial: date, data_final: date):
-    results = (local_session.query(Benchmark)
-               .filter(
-                   and_(
-                       Benchmark.benchmark == TipoBenchmark.IBOV,
-                       Benchmark.data >= data_inicial,
-                       Benchmark.data <= data_final
-                   )
-    ).order_by(asc(Benchmark.data)).all())
+    # results = (local_session.query(Benchmark)
+    #            .filter(
+    #                and_(
+    #                    Benchmark.benchmark == TipoBenchmark.IBOV,
+    #                    Benchmark.data >= data_inicial,
+    #                    Benchmark.data <= data_final
+    #                )
+    # ).order_by(asc(Benchmark.data)).all())
+    results = local_session.query(Benchmark).all()
+    print(results)
     return results
 
 
@@ -66,13 +67,6 @@ def generate_graph(meses: int,
     p.quad(top=hist, bottom=0,
            left=edges[:-1], right=edges[1:], fill_color="skyblue", line_color="white")
 
-    # Plotting Normal Curve:
-    # retornos = np.array(retornos)
-    # mu, sigma = retornos.mean(), retornos.std()
-    # x = bins
-    # pdf = 1/(sigma * np.sqrt(2*np.pi)) * np.exp(-(x-mu)**2 / (2*sigma**2))
-    # p.line(x, pdf, line_color='navy', line_width=2)
-
     p.y_range.start = 0
     p.xaxis.axis_label = "Retorno Percentual IBOV"
     p.yaxis.axis_label = "(%) De Observações"
@@ -117,8 +111,6 @@ def create_percentile_table(df):
                         align='center'))])
     
     fig.update_layout(margin=dict(l=0, r=0, t=0, b=0))
-    
-    # fig =  ff.create_table(df, height_constant=22)
     return fig
 
 
