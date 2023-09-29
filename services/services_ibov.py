@@ -9,16 +9,14 @@ import plotly.graph_objects as go
 
 
 def retrieve_ibov_data(local_session: Session, data_inicial: date, data_final: date):
-    # results = (local_session.query(Benchmark)
-    #            .filter(
-    #                and_(
-    #                    Benchmark.benchmark == TipoBenchmark.IBOV,
-    #                    Benchmark.data >= data_inicial,
-    #                    Benchmark.data <= data_final
-    #                )
-    # ).order_by(asc(Benchmark.data)).all())
-    results = local_session.query(Benchmark).all()
-    print(results)
+    results = (local_session.query(Benchmark)
+               .filter(
+                   and_(
+                       Benchmark.benchmark == TipoBenchmark.IBOV,
+                       Benchmark.data >= data_inicial,
+                       Benchmark.data <= data_final
+                   )
+    ).order_by(asc(Benchmark.data)).all())
     return results
 
 
